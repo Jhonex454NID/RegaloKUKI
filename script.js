@@ -3,9 +3,11 @@ const carta = document.getElementById("carta");
 const contenido = document.getElementById("contenido");
 const musica = document.getElementById("musica");
 const lluvia = document.getElementById("lluvia-corazones");
+const resetBtn = document.getElementById("reset");
 
 let paso = 0;
 let lluviaActiva = false;
+let lluviaIntervalo = null;
 
 const cartas = [
   {
@@ -14,7 +16,7 @@ const cartas = [
       <p>
         Desde que llegó a mi vida, todo se siente más bonito.
       </p>
-      <p><small>(clic)</small></p>
+      <p><small>(toca para continuar)</small></p>
     `,
     lluvia: true
   },
@@ -22,15 +24,15 @@ const cartas = [
     html: `
       <h1>Gracias ✨</h1>
       <p>
-        Gracias por su tiempo, su cariño y su forma de ser.
+        Gracias por su tiempo, su cariño y cada momento compartido.
       </p>
     `
   },
   {
     html: `
-      <h1>Quería preguntarle 💌</h1>
+      <h1>Hay algo que quiero decir 💌</h1>
       <p>
-        ¿Y si seguimos escribiendo nuestra historia juntos?
+        Me encanta la forma en que usted es, tal cual.
       </p>
     `
   },
@@ -42,9 +44,10 @@ const cartas = [
   }
 ];
 
-// CLICK AL REGALO → SOLO INICIA
+// CLICK REGALO
 regalo.addEventListener("click", (e) => {
-  e.stopPropagation(); // ⛔ evita doble click
+  e.stopPropagation();
+
   regalo.style.display = "none";
   carta.classList.remove("oculto");
 
@@ -54,7 +57,7 @@ regalo.addEventListener("click", (e) => {
   mostrarCarta();
 });
 
-// CLICK A LA CARTA → AVANZA
+// CLICK CARTA
 carta.addEventListener("click", (e) => {
   e.stopPropagation();
   mostrarCarta();
@@ -74,7 +77,7 @@ function mostrarCarta() {
 
 function iniciarLluvia() {
   lluviaActiva = true;
-  setInterval(() => {
+  lluviaIntervalo = setInterval(() => {
     const c = document.createElement("div");
     c.className = "corazon";
     c.textContent = "❤️";
@@ -83,4 +86,29 @@ function iniciarLluvia() {
     setTimeout(() => c.remove(), 5000);
   }, 300);
 }
+
+// RESET
+resetBtn.addEventListener("click", (e) => {
+  e.stopPropagation();
+
+  paso = 0;
+  lluviaActiva = false;
+
+  if (lluviaIntervalo) {
+    clearInterval(lluviaIntervalo);
+    lluviaIntervalo = null;
+  }
+
+  lluvia.innerHTML = "";
+  contenido.innerHTML = "";
+
+  carta.classList.add("oculto");
+  regalo.style.display = "flex";
+
+  musica.pause();
+  musica.currentTime = 0;
+});
+
+
+
 
